@@ -9,6 +9,8 @@ public class characterMovementAndAnimation : MonoBehaviour
     Animator _animator;
     CharacterController _characterController;
 
+    public Camera CharacterCamera;
+
     // Movement Values
     PlayerInputs _playerInput;
     Vector2 _inputMovement;
@@ -46,6 +48,10 @@ public class characterMovementAndAnimation : MonoBehaviour
         _animatorVelocityZHash = Animator.StringToHash("VelocityZ");
     }
 
+    private void Start()
+    {
+        //CharacterCamera = GetComponent<Camera>();
+    }
 
     void onMovementInput(InputAction.CallbackContext context)
     {
@@ -64,18 +70,38 @@ public class characterMovementAndAnimation : MonoBehaviour
 
     void handleMovement()
     {
-        Vector3 targetVelocity = Vector3.zero;
+        // Get camera relative axis.
+        Vector3 forward = CharacterCamera.transform.forward;
+        Vector3 right = CharacterCamera.transform.right;
+
+        // Cleanup y component of vector.
+        forward = NormalizeIntoXZPlane(forward);
+        right = NormalizeIntoXZPlane(right);
+
+        Debug.Log(right);
+
+        // Calculate current target velocity.
         float currentMaxVelocity;
-
         currentMaxVelocity = _isRunPressed ? MaxRunVelocity : MaxWalkVelocity;
-        targetVelocity += _inputMovement.y * transform.forward * currentMaxVelocity;
-        targetVelocity += _inputMovement.x * transform.right * currentMaxVelocity;
 
+        Vector3 targetVelocity = Vector3.zero;
+
+        targetVelocity += _inputMovement.y * forward * currentMaxVelocity;
+        targetVelocity += _inputMovement.x * right * currentMaxVelocity;
+
+        // Interpolate between current and target velocity.
         if (_currentVelocity.z != targetVelocity.z || _currentVelocity.x != targetVelocity.x)
         {
             _currentVelocity = Vector3.Lerp(_currentVelocity, targetVelocity, TransitionSpeed * Time.deltaTime);
             clampWalkingVelocity(targetVelocity);
         }
+    }
+
+    Vector3 NormalizeIntoXZPlane(Vector3 targetVector)
+    {
+        targetVector.y = 0;
+        targetVector.Normalize();
+        return targetVector;
     }
 
     void clampWalkingVelocity(Vector3 targetVelocity)
@@ -104,10 +130,8 @@ public class characterMovementAndAnimation : MonoBehaviour
 
     void handleRotation()
     {
-        float horizontalRotation = RotationSpeed * _inputLook.x * Time.deltaTime;
-        Vector3 rotationDelta = new Vector3 ( 0.0f, horizontalRotation, 0.0f );
-
-        transform.Rotate(rotationDelta);
+        Vector3 positionToLookAt = transform.position + new Vector3 (_currentVelocity.x, 0.0f, _currentVelocity.z);
+        transform.LookAt(positionToLookAt);
     }
 
 
@@ -123,10 +147,10 @@ public class characterMovementAndAnimation : MonoBehaviour
     {
         handleMovement();
         handleGravity();
+        handleRotation();
 
         _characterController.Move(_currentVelocity * Time.deltaTime);
 
-        handleRotation();
         handleAnimation();  
     }
 

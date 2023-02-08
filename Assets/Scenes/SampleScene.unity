@@ -219,7 +219,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &458370357
 GameObject:
@@ -316,7 +316,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
@@ -411,7 +411,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!114 &705507996
 MonoBehaviour:
@@ -450,10 +450,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0c338154109be14ba7ee6232cead616, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 3
-  transitionSpeed: 3
-  maxWalkVelocity: 1.4
-  maxRunVelocity: 5
+  CharacterCamera: {fileID: 0}
+  RotationSpeed: 90
+  TransitionSpeed: 3
+  MaxWalkVelocity: 1.4
+  MaxRunVelocity: 5
 --- !u!143 &947158820
 CharacterController:
   m_ObjectHideFlags: 0
@@ -559,8 +560,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2115653596}
-  m_RootOrder: 3
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 10, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
@@ -627,7 +628,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2115653596}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 10, y: -89.6, z: 0}
 --- !u!114 &1068862453
 MonoBehaviour:
@@ -722,7 +723,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: f92b0eb72bf7af048b607ae09dbeca84, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f92b0eb72bf7af048b607ae09dbeca84, type: 3}
       propertyPath: m_LocalPosition.x
@@ -873,7 +874,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1586290204
 GameObject:
@@ -970,7 +971,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2027591794
 GameObject:
@@ -1099,7 +1100,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: f92b0eb72bf7af048b607ae09dbeca84, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f92b0eb72bf7af048b607ae09dbeca84, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1194,10 +1195,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0c338154109be14ba7ee6232cead616, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 90
-  transitionSpeed: 10
-  maxWalkVelocity: 1.45
-  maxRunVelocity: 5
+  CharacterCamera: {fileID: 963194227}
+  RotationSpeed: 90
+  TransitionSpeed: 3
+  MaxWalkVelocity: 1.4
+  MaxRunVelocity: 5
 --- !u!4 &2115653596 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f92b0eb72bf7af048b607ae09dbeca84, type: 3}

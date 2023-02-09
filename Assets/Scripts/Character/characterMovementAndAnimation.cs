@@ -23,9 +23,12 @@ public class characterMovementAndAnimation : MonoBehaviour
     public float MaxWalkVelocity = 1.4f;
     public float MaxRunVelocity = 5.0f;
 
+    bool _isMoving;
+
     // Animation values
     int _animatorVelocityXHash;
     int _animatorVelocityZHash;
+    int _animatorIsMovingHash;
 
     void Awake()
     {
@@ -46,6 +49,7 @@ public class characterMovementAndAnimation : MonoBehaviour
 
         _animatorVelocityXHash = Animator.StringToHash("VelocityX");
         _animatorVelocityZHash = Animator.StringToHash("VelocityZ");
+        _animatorIsMovingHash = Animator.StringToHash("IsMoving");
     }
 
     private void Start()
@@ -95,6 +99,8 @@ public class characterMovementAndAnimation : MonoBehaviour
             _currentVelocity = Vector3.Lerp(_currentVelocity, targetVelocity, TransitionSpeed * Time.deltaTime);
             clampWalkingVelocity(targetVelocity);
         }
+             
+        _isMoving = Mathf.Abs(_currentVelocity.z) > 0.1 || Mathf.Abs(_currentVelocity.x) > 0.1;
     }
 
     Vector3 NormalizeIntoXZPlane(Vector3 targetVector)
@@ -106,10 +112,10 @@ public class characterMovementAndAnimation : MonoBehaviour
 
     void clampWalkingVelocity(Vector3 targetVelocity)
     {
-        if (Mathf.Abs(_currentVelocity.z) <= 0.001f) _currentVelocity.z = 0;
-        if (Mathf.Abs(_currentVelocity.x) <= 0.001f) _currentVelocity.x = 0;
-        if (Mathf.Abs(targetVelocity.z - _currentVelocity.z) < 0.001f) _currentVelocity.z = targetVelocity.z;
-        if (Mathf.Abs(targetVelocity.x - _currentVelocity.x) < 0.001f) _currentVelocity.x = targetVelocity.x;
+        if (Mathf.Abs(_currentVelocity.z) <= 0.01f) _currentVelocity.z = 0;
+        if (Mathf.Abs(_currentVelocity.x) <= 0.01f) _currentVelocity.x = 0;
+        if (Mathf.Abs(targetVelocity.z - _currentVelocity.z) < 0.01f) _currentVelocity.z = targetVelocity.z;
+        if (Mathf.Abs(targetVelocity.x - _currentVelocity.x) < 0.01f) _currentVelocity.x = targetVelocity.x;
     }
 
     void handleGravity()
@@ -130,8 +136,11 @@ public class characterMovementAndAnimation : MonoBehaviour
 
     void handleRotation()
     {
-        Vector3 positionToLookAt = transform.position + new Vector3 (_currentVelocity.x, 0.0f, _currentVelocity.z);
-        transform.LookAt(positionToLookAt);
+        if (_isMoving) 
+        {
+            Vector3 positionToLookAt = transform.position + new Vector3(_currentVelocity.x, 0.0f, _currentVelocity.z);
+            transform.LookAt(positionToLookAt);
+        }   
     }
 
 
@@ -140,6 +149,7 @@ public class characterMovementAndAnimation : MonoBehaviour
         Vector3 localVelocity = transform.InverseTransformDirection (_currentVelocity);
         _animator.SetFloat(_animatorVelocityXHash, localVelocity.x);
         _animator.SetFloat(_animatorVelocityZHash, localVelocity.z);
+        _animator.SetBool(_animatorIsMovingHash, _isMoving);
     }
 
     // Update is called once per frame
@@ -148,10 +158,17 @@ public class characterMovementAndAnimation : MonoBehaviour
         handleMovement();
         handleGravity();
         handleRotation();
-
-        _characterController.Move(_currentVelocity * Time.deltaTime);
-
+        // Animation drives movement.
         handleAnimation();  
+    }
+
+    private void OnAnimatorMove()
+    {
+        if (_isMoving) { 
+            Vector3 velocity = _animator.deltaPosition;
+            velocity.y = _currentVelocity.y * Time.deltaTime;
+            _characterController.Move(velocity);
+        }
     }
 
     void OnEnable()
